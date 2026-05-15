@@ -66,6 +66,12 @@ async def run(image_bytes: bytes, cassette_type: CassetteType) -> ReadResponse:
     # [1] Quality assessment
     quality = await asyncio.to_thread(imaging.assess_quality, image_bytes)
 
+    logger.info(
+        "pipeline | request=%s cassette=%s | quality: blur=%.1f exposure_ok=%s acceptable=%s reason=%s",
+        request_id, cassette_type.value,
+        quality.blur_score, quality.exposure_ok, quality.acceptable, quality.failure_reason,
+    )
+
     if not quality.acceptable:
         raise PipelineError(
             code=quality.failure_reason.value if quality.failure_reason else "quality_failure",
@@ -74,6 +80,11 @@ async def run(image_bytes: bytes, cassette_type: CassetteType) -> ReadResponse:
 
     # [2] Cassette detection
     bbox: BoundingBox | None = await asyncio.to_thread(imaging.detect_cassette, image_bytes)
+
+    logger.info(
+        "pipeline | request=%s | cassette detection: bbox=%s",
+        request_id, bbox,
+    )
 
     if bbox is None:
         quality = ImageQuality(

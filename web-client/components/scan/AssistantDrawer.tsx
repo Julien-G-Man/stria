@@ -56,7 +56,7 @@ export default function AssistantDrawer({ result, onClose }: Props) {
       />
 
       {/* Drawer */}
-      <div className="relative w-full flex flex-col rounded-t-3xl overflow-hidden" style={{ height: '82vh', backgroundColor: '#ffffff' }}>
+      <div className="relative w-full flex flex-col rounded-t-3xl overflow-hidden" style={{ height: '82vh', backgroundColor: '#ffffff', maxWidth: '100vw', boxSizing: 'border-box' }}>
 
         {/* Drag handle */}
         <div className="flex justify-center pt-3 pb-2 flex-shrink-0">
@@ -148,15 +148,15 @@ export default function AssistantDrawer({ result, onClose }: Props) {
         </div>
 
         {/* Input bar */}
-        <div className="flex-shrink-0 px-4 pb-8 pt-3 flex gap-2" style={{ borderTop: '1px solid #f3f4f6' }}>
+        <div className="flex-shrink-0 px-4 pb-8 pt-3 flex gap-2" style={{ borderTop: '1px solid #f3f4f6', minWidth: 0 }}>
           <input
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && send()}
             placeholder="Ask about this result…"
-            className="flex-1 rounded-2xl px-4 py-3 text-sm outline-none"
-            style={{ backgroundColor: '#f9fafb', border: '1.5px solid #e5e7eb' }}
+            className="flex-1 rounded-2xl px-4 py-3 text-sm outline-none min-w-0"
+            style={{ backgroundColor: '#f9fafb', border: '1.5px solid #e5e7eb', width: '100%' }}
           />
           <button
             onClick={send}

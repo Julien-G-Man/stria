@@ -97,7 +97,7 @@ def detect_cassette(image_bytes: bytes) -> BoundingBox | None:
 
     for cnt in contours:
         area = cv2.contourArea(cnt)
-        if area < image_area * 0.10:
+        if area < image_area * 0.04:
             continue
 
         x, y, bw, bh = cv2.boundingRect(cnt)

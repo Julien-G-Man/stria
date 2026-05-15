@@ -213,10 +213,20 @@ export default function CameraCapture({ cassetteType, onCapture, onBack, errorMe
         </div>
       </div>
 
+      {/* Error banner */}
+      {errorMessage && (
+        <div className="absolute z-20 left-4 right-4 flex items-start gap-3 px-4 py-3 rounded-2xl" style={{ top: '100px', backgroundColor: 'rgba(220,38,38,0.92)', backdropFilter: 'blur(8px)' }}>
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" className="flex-shrink-0 mt-0.5">
+            <path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <p className="text-white text-sm font-medium leading-snug">{errorMessage}</p>
+        </div>
+      )}
+
       {/* Instruction pill */}
       <div className="absolute z-10 left-0 right-0 flex justify-center" style={{ bottom: '160px' }}>
         <div className="px-5 py-2.5 rounded-full" style={{ backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(8px)' }}>
-          <p className="text-white text-sm font-medium">{instructionText}</p>
+          <p className="text-white text-sm font-medium">{instructions[detectionState]}</p>
         </div>
       </div>
 

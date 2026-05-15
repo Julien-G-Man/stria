@@ -17,7 +17,7 @@ class Settings(BaseSettings):
 
     # Pipeline tuning
     min_confidence: float = 0.70
-    blur_variance_threshold: float = 80.0
+    blur_variance_threshold: float = 40.0
     max_image_size_mb: int = 10
 
     # Runtime

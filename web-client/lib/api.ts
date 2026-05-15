@@ -16,10 +16,30 @@ export class ApiError extends Error {
   }
 }
 
+function extractErrorMessage(status: number, body: string): string {
+  try {
+    const json = JSON.parse(body);
+    // FastAPI validation error: { detail: [{ msg, loc }] }
+    if (Array.isArray(json.detail)) {
+      return json.detail.map((e: { msg?: string }) => e.msg ?? 'Invalid input').join(', ');
+    }
+    // FastAPI HTTP exception: { detail: "string" }
+    if (typeof json.detail === 'string') return json.detail;
+    // slowapi rate limit: { error: "..." }
+    if (typeof json.error === 'string') return json.error;
+  } catch { /* not JSON */ }
+
+  // Fallback by status code
+  if (status === 429) return 'Too many requests — please wait a moment and try again.';
+  if (status === 422) return 'The image could not be processed. Please try again.';
+  if (status >= 500) return 'Server error — please try again in a few seconds.';
+  return 'Something went wrong. Please try again.';
+}
+
 async function handleResponse<T>(res: Response): Promise<T> {
   if (!res.ok) {
-    const text = await res.text().catch(() => res.statusText);
-    throw new ApiError(res.status, text);
+    const body = await res.text().catch(() => '');
+    throw new ApiError(res.status, extractErrorMessage(res.status, body));
   }
   return res.json() as Promise<T>;
 }
