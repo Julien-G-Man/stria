@@ -30,7 +30,9 @@ tests/fixtures/images/
 stria/data/documents/*.txt
 stria/data/documents/*.pdf
 CLAUDE.md
+web-client/FRONTEND.md
 photos/
+scripts/debug_window.jpg
 # logs
 *.log
 logs/

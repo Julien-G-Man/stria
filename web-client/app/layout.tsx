@@ -1,21 +1,15 @@
 import type { Metadata } from 'next';
-import { IBM_Plex_Mono, Space_Grotesk } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import './globals.css';
 
-const spaceGrotesk = Space_Grotesk({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-space-grotesk',
-});
-
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-ibm-plex-mono',
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
   title: 'Stria',
-  description: 'A focused workspace for tracing, reading, and reasoning about documents.',
+  description: 'AI-powered RDT reader for community health workers',
 };
 
 export default function RootLayout({
@@ -25,9 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${spaceGrotesk.variable} ${ibmPlexMono.variable}`}>
-        {children}
-      </body>
+      <body className={inter.variable}>{children}</body>
     </html>
   );
 }

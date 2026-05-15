@@ -80,3 +80,9 @@ class AssistantResponse(BaseModel):
 
 class SaveResultRequest(BaseModel):
     response: ReadResponse
+
+
+class DetectResponse(BaseModel):
+    detected: bool
+    bbox: BoundingBox | None = None
+

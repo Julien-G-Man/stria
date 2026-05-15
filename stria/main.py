@@ -13,6 +13,7 @@ from slowapi.errors import RateLimitExceeded
 from stria.config import get_settings
 from stria.limiter import limiter
 from stria.models import AssistantRequest, AssistantResponse
+from stria.routes.detect import router as detect_router
 from stria.routes.read import router as read_router
 from stria.routes.results import router as results_router
 from stria.services import protocols, storage
@@ -58,12 +59,13 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://stria.netlify.app"],
+    allow_origins=["http://localhost:3000", "https://stria-scan.netlify.app"],
     allow_credentials=False,
     allow_methods=["GET", "POST", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],
 )
 
+app.include_router(detect_router)
 app.include_router(read_router)
 app.include_router(results_router)
 
