@@ -70,6 +70,11 @@ app.include_router(read_router)
 app.include_router(results_router)
 
 
+@app.get("/")
+async def root():
+    return {"message": "Stria API is live!"}
+
+
 @app.get("/health")
 async def health():
     return {"status": "ok"}

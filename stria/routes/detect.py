@@ -18,7 +18,7 @@ router = APIRouter()
 
 
 @router.post("/api/detect-cassette", response_model=DetectResponse)
-@limiter.limit("60/minute")
+@limiter.limit("40/minute")
 async def detect_cassette(
     request: Request,
     image: UploadFile = File(...),

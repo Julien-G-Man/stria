@@ -8,7 +8,7 @@ import type { CassetteType } from '@/lib/types';
 type DetectionState = 'none' | 'detected' | 'stable' | 'error';
 
 const STABILITY_MS = 1500;
-const POLL_INTERVAL_MS = 500;
+const POLL_INTERVAL_MS = 1500;
 
 const typeLabels: Record<CassetteType, string> = {
   malaria: 'Malaria RDT',
@@ -67,10 +67,19 @@ export default function CameraCapture({ cassetteType, onCapture, onBack, errorMe
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stableTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const capturedRef = useRef(false);
+  const detectingRef = useRef(false);
 
   const [detectionState, setDetectionState] = useState<DetectionState>('none');
   const [showLightbox, setShowLightbox] = useState(false);
   const [streamReady, setStreamReady] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     if (!localStorage.getItem('stria_lightbox_dismissed')) setShowLightbox(true);
@@ -116,7 +125,8 @@ export default function CameraCapture({ cassetteType, onCapture, onBack, errorMe
       pollCanvas.height = h;
       pollCanvas.getContext('2d')?.drawImage(video, 0, 0, w, h);
       pollCanvas.toBlob(async (blob) => {
-        if (!blob || capturedRef.current) return;
+        if (!blob || capturedRef.current || detectingRef.current) return;
+        detectingRef.current = true;
         try {
           const { detected } = await detectCassette(blob);
           if (capturedRef.current) return;
@@ -136,6 +146,7 @@ export default function CameraCapture({ cassetteType, onCapture, onBack, errorMe
             setDetectionState((prev) => (prev === 'stable' ? 'stable' : 'none'));
           }
         } catch { /* ignore polling errors */ }
+        finally { detectingRef.current = false; }
       }, 'image/jpeg', 0.6);
     }, POLL_INTERVAL_MS);
     return () => {
@@ -146,6 +157,9 @@ export default function CameraCapture({ cassetteType, onCapture, onBack, errorMe
 
   const frameColor = frameColors[detectionState];
   const instructionText = errorMessage ?? instructions[detectionState];
+  const frameStyle = isMobile
+    ? { width: '70%', aspectRatio: '3/5' }
+    : { width: '80%', aspectRatio: '5/3' };
 
   return (
     <div className="fixed inset-0 bg-black">
@@ -184,9 +198,9 @@ export default function CameraCapture({ cassetteType, onCapture, onBack, errorMe
         </button>
       </div>
 
-      {/* Guide frame — centered, landscape cassette ratio */}
+      {/* Guide frame — portrait on mobile, landscape on desktop */}
       <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-        <div className="relative" style={{ width: '80%', aspectRatio: '5/3' }}>
+        <div className="relative" style={frameStyle}>
           <CornerBracket top left color={frameColor} />
           <CornerBracket top={true} left={false} color={frameColor} />
           <CornerBracket top={false} left color={frameColor} />
