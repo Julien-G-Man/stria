@@ -84,10 +84,14 @@ def detect_cassette(image_bytes: bytes) -> BoundingBox | None:
     image_area = h * w
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-    edges = cv2.Canny(blurred, 30, 100)
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
-    dilated = cv2.dilate(edges, kernel, iterations=2)
+
+    # Scale blur kernel with image size so edges close cleanly at any resolution.
+    # At 320px: k≈5; at 1600px: k≈17 — without scaling, contours fragment on full captures.
+    k = max(5, int(min(h, w) * 0.012) | 1)
+    blurred = cv2.GaussianBlur(gray, (k, k), 0)
+    edges = cv2.Canny(blurred, 20, 80)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (7, 7))
+    dilated = cv2.dilate(edges, kernel, iterations=3)
 
     contours, _ = cv2.findContours(dilated, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     if not contours:
@@ -97,7 +101,7 @@ def detect_cassette(image_bytes: bytes) -> BoundingBox | None:
 
     for cnt in contours:
         area = cv2.contourArea(cnt)
-        if area < image_area * 0.04:
+        if area < image_area * 0.03:
             continue
 
         x, y, bw, bh = cv2.boundingRect(cnt)
@@ -105,9 +109,9 @@ def detect_cassette(image_bytes: bytes) -> BoundingBox | None:
             continue
         aspect = bw / bh
 
-        # Accept landscape (3:1–6:1) or portrait (1:3–1:6) cassette shapes
-        landscape = 2.5 <= aspect <= 6.0
-        portrait = 0.15 <= aspect <= 0.40
+        # Landscape cassette (2:1–8:1) or portrait in frame (1:2–1:8)
+        landscape = 1.8 <= aspect <= 8.0
+        portrait = 0.12 <= aspect <= 0.55
         if not (landscape or portrait):
             continue
 
