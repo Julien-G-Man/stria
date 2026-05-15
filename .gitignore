@@ -1,0 +1,55 @@
+# python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# env
+.env
+.env.*
+!.env.example
+
+# virtual environments
+.venv/
+venv/
+env/
+
+# database
+*.sqlite3
+*.db
+
+# test cassette images (can be large, share separately)
+scripts/cassettes/
+tests/fixtures/images/
+
+# documents corpus (add manually, not committed)
+stria/data/documents/*.txt
+stria/data/documents/*.pdf
+
+# logs
+*.log
+logs/
+
+# next.js
+web-client/.next/
+web-client/out/
+web-client/node_modules/
+
+# editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# os
+.DS_Store
+Thumbs.db
+
+# coverage
+.coverage
+htmlcov/
+.pytest_cache/
