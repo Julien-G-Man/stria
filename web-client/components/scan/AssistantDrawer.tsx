@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { sendMessage } from '@/lib/api';
 import type { ReadResponse, AssistantMessage, AssistantMessageWithSources } from '@/lib/types';
 
@@ -19,8 +20,32 @@ export default function AssistantDrawer({ result, onClose }: Props) {
   const [messages, setMessages] = useState<AssistantMessageWithSources[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [dragY, setDragY] = useState(0);
+  const [dragging, setDragging] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const dragStartY = useRef<number | null>(null);
+
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    dragStartY.current = e.touches[0].clientY;
+    setDragging(true);
+  }, []);
+
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
+    if (dragStartY.current === null) return;
+    const delta = e.touches[0].clientY - dragStartY.current;
+    if (delta > 0) setDragY(delta);
+  }, []);
+
+  const onTouchEnd = useCallback(() => {
+    if (dragY > 100) {
+      onClose();
+    } else {
+      setDragY(0);
+    }
+    setDragging(false);
+    dragStartY.current = null;
+  }, [dragY, onClose]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -56,11 +81,25 @@ export default function AssistantDrawer({ result, onClose }: Props) {
       />
 
       {/* Drawer */}
-      <div className="relative w-full flex flex-col rounded-t-3xl overflow-hidden" style={{ height: '82vh', backgroundColor: '#ffffff', maxWidth: '100vw', boxSizing: 'border-box' }}>
-
+      <div
+        className="relative w-full flex flex-col rounded-t-3xl overflow-hidden"
+        style={{
+          height: '82vh',
+          backgroundColor: '#ffffff',
+          maxWidth: '100vw',
+          boxSizing: 'border-box',
+          transform: `translateY(${dragY}px)`,
+          transition: dragging ? 'none' : 'transform 0.3s ease',
+        }}
+      >
         {/* Drag handle */}
-        <div className="flex justify-center pt-3 pb-2 flex-shrink-0">
-          <button onClick={onClose} className="w-10 h-1 rounded-full bg-gray-200" aria-label="Close" />
+        <div
+          className="flex justify-center pt-3 pb-2 flex-shrink-0 cursor-grab active:cursor-grabbing"
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
+        >
+          <div className="w-10 h-1 rounded-full bg-gray-200" />
         </div>
 
         {/* Context chip */}
@@ -118,7 +157,22 @@ export default function AssistantDrawer({ result, onClose }: Props) {
                       : { backgroundColor: '#f3f4f6', color: '#111827', borderBottomLeftRadius: '4px' }
                   }
                 >
-                  <p>{m.content}</p>
+                  {isUser ? (
+                    <p>{m.content}</p>
+                  ) : (
+                    <ReactMarkdown
+                      components={{
+                        p: ({ children }) => <p className="mb-1 last:mb-0">{children}</p>,
+                        strong: ({ children }) => <strong className="font-semibold">{children}</strong>,
+                        ul: ({ children }) => <ul className="list-disc pl-4 mb-1 space-y-0.5">{children}</ul>,
+                        ol: ({ children }) => <ol className="list-decimal pl-4 mb-1 space-y-0.5">{children}</ol>,
+                        li: ({ children }) => <li>{children}</li>,
+                        code: ({ children }) => <code className="px-1 py-0.5 rounded text-xs" style={{ backgroundColor: 'rgba(0,0,0,0.08)' }}>{children}</code>,
+                      }}
+                    >
+                      {m.content}
+                    </ReactMarkdown>
+                  )}
                   {!isUser && m.sources && m.sources.length > 0 && (
                     <p className="text-xs mt-2 pt-1.5" style={{ color: '#9ca3af', borderTop: '1px solid #e5e7eb' }}>
                       {m.sources.join(' · ')}

@@ -61,19 +61,31 @@ export default function ResultCard({ result, onAskQuestion, onScanAnother, onBac
           </div>
         </div>
 
-        {/* Confidence bar */}
-        <div className="mt-6">
-          <div className="flex justify-between text-xs text-white/60 mb-1.5">
-            <span>Confidence</span>
-            <span>{conf}%</span>
+        {/* Confidence bar — only for positive/negative results */}
+        {r.outcome !== 'invalid' ? (
+          <div className="mt-6">
+            <div className="flex justify-between text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.6)' }}>
+              <span>Confidence</span>
+              <span>{conf}%</span>
+            </div>
+            <div className="h-1.5 rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
+              <div
+                className="h-full rounded-full bg-white transition-all"
+                style={{ width: `${conf}%` }}
+              />
+            </div>
           </div>
-          <div className="h-1.5 rounded-full" style={{ backgroundColor: 'rgba(255,255,255,0.2)' }}>
-            <div
-              className="h-full rounded-full bg-white transition-all"
-              style={{ width: `${conf}%` }}
-            />
+        ) : (
+          <div className="mt-6 px-3 py-2 rounded-xl" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }}>
+            <p className="text-xs font-medium" style={{ color: 'rgba(255,255,255,0.85)' }}>
+              {r.invalid_reason === 'no_control_line'
+                ? 'Control line not detected — the test may not have run correctly. Repeat with a new cassette.'
+                : r.invalid_reason === 'result_ambiguous'
+                ? 'Result could not be read clearly. Ensure good lighting and try again.'
+                : 'Test result is invalid. Discard and repeat with a new cassette.'}
+            </p>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Body */}
