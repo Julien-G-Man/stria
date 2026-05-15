@@ -1,0 +1,133 @@
+{
+  "malaria": {
+    "positive": {
+      "title": "Malaria Positive",
+      "steps": [
+        "Do not administer treatment without clinical confirmation.",
+        "Refer patient to the nearest clinic or health post immediately.",
+        "Record the result and patient details in the community register.",
+        "If referral is delayed and the patient has severe symptoms (high fever, vomiting, confusion), follow GHS emergency protocol and seek urgent help.",
+        "Advise the patient not to take medication not prescribed by a health worker."
+      ],
+      "refer": true
+    },
+    "negative": {
+      "title": "Malaria Negative",
+      "steps": [
+        "Reassure the patient — the test is negative for malaria antigens.",
+        "If symptoms (fever, chills, headache) persist after 24–48 hours, advise the patient to return for re-testing.",
+        "Consider other causes of fever if symptoms are ongoing.",
+        "Record the result in the community register."
+      ],
+      "refer": false
+    },
+    "invalid": {
+      "title": "Invalid Test — Repeat Required",
+      "steps": [
+        "Discard this cassette. Do not read the result.",
+        "Repeat the test with a new cassette from the same batch.",
+        "Check that the correct blood sample volume was applied (usually one small drop).",
+        "Check the cassette expiry date before repeating.",
+        "If a second test is also invalid, refer the patient to the clinic."
+      ],
+      "refer": false
+    }
+  },
+  "covid": {
+    "positive": {
+      "title": "COVID-19 Positive",
+      "steps": [
+        "Advise the patient to self-isolate immediately and avoid contact with others.",
+        "Refer for confirmatory PCR test if available.",
+        "Instruct the patient to rest, stay hydrated, and monitor symptoms.",
+        "Refer to clinic immediately if the patient has difficulty breathing, chest pain, or low oxygen saturation.",
+        "Report the case to the district health office as per GHS protocol."
+      ],
+      "refer": true
+    },
+    "negative": {
+      "title": "COVID-19 Negative",
+      "steps": [
+        "Reassure the patient. Test is negative for COVID-19 antigen.",
+        "Remind the patient that a negative antigen test early in infection may not rule out COVID-19.",
+        "If symptoms are severe or persistent, advise the patient to return for a repeat test in 24–48 hours.",
+        "Record the result."
+      ],
+      "refer": false
+    },
+    "invalid": {
+      "title": "Invalid Test — Repeat Required",
+      "steps": [
+        "Discard this cassette.",
+        "Repeat with a new cassette.",
+        "Ensure the sample was collected correctly (nasal swab per instructions).",
+        "Check cassette expiry date.",
+        "If repeat is invalid, refer the patient."
+      ],
+      "refer": false
+    }
+  },
+  "pregnancy": {
+    "positive": {
+      "title": "Pregnancy Test Positive",
+      "steps": [
+        "Confirm the result with the patient calmly and privately.",
+        "Refer for antenatal care (ANC) registration at the nearest health facility.",
+        "Provide information on early ANC attendance and its importance.",
+        "Record the result confidentially."
+      ],
+      "refer": true
+    },
+    "negative": {
+      "title": "Pregnancy Test Negative",
+      "steps": [
+        "Test is negative. If the patient still suspects pregnancy, advise retesting after 1 week.",
+        "Refer to clinic if there are other concerns."
+      ],
+      "refer": false
+    },
+    "invalid": {
+      "title": "Invalid Test — Repeat Required",
+      "steps": [
+        "Discard this cassette.",
+        "Repeat with a new cassette.",
+        "Ensure urine sample was applied correctly per instructions.",
+        "If repeat is invalid, refer the patient."
+      ],
+      "refer": false
+    }
+  },
+  "hiv": {
+    "positive": {
+      "title": "HIV Reactive — Confirmatory Testing Required",
+      "steps": [
+        "A reactive result requires confirmatory testing. This is not a diagnosis of HIV.",
+        "Refer the patient to the nearest HIV testing and counselling centre immediately.",
+        "Provide emotional support and maintain strict confidentiality.",
+        "Do not disclose the result to anyone other than the patient.",
+        "Record the result using the patient's anonymous ID only."
+      ],
+      "refer": true
+    },
+    "negative": {
+      "title": "HIV Non-Reactive",
+      "steps": [
+        "The result is non-reactive. Explain that this means no HIV antibodies were detected at this time.",
+        "If the patient has had a recent high-risk exposure (within 3 months), advise retesting.",
+        "Provide HIV prevention counselling and information on consistent condom use.",
+        "Record the result."
+      ],
+      "refer": false
+    },
+    "invalid": {
+      "title": "Invalid Test — Repeat Required",
+      "steps": [
+        "Discard this cassette.",
+        "Repeat with a new cassette.",
+        "Ensure blood sample volume and application were correct.",
+        "If repeat is invalid, refer the patient to the health facility."
+      ],
+      "refer": false
+    }
+  }
+}

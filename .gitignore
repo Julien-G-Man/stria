@@ -29,7 +29,8 @@ tests/fixtures/images/
 # documents corpus (add manually, not committed)
 stria/data/documents/*.txt
 stria/data/documents/*.pdf
-
+CLAUDE.md
+photos/
 # logs
 *.log
 logs/
