@@ -3,7 +3,7 @@ services:
     name: stria-api
     runtime: python
     buildCommand: pip install poetry && poetry install --no-root
-    startCommand: poetry run uvicorn stria.main:app --host 0.0.0.0 --port $PORT
+    startCommand: poetry run python -m uvicorn stria.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: PORT
         sync: false
